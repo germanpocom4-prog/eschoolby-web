@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Школа.by — Электронный дневник (редизайн)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============ НОВЫЙ ДИЗАЙН v3 ============ */
+    :root {
+      /* Минималистичная палитра под diary.e-schools.by */
+      --bg-body: #f8f9fa;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --bg-hover: #e9ecef;
+      --bg-active: #dee2e6;
+      --text-primary: #212529;
+      --text-secondary: #6c757d;
+      --text-muted: #868e96;
+      --accent: #495057;
+      --accent-hover: #343a40;
+      --accent-soft: #f8f9fa;
+      --border: #dee2e6;
+      --border-focus: #495057;
+      --error: #dc3545;
+      --error-soft: #f8d7da;
+      --success: #28a745;
+      --success-soft: #d1e7dd;
+      --warning: #ffc107;
+      --warning-soft: #fff3cd;
+      --radius: 6px;
+      --radius-sm: 6px;
+      --border-width: 1px;
+      --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --nav-height: 56px;
+      --mobile-nav-height: 64px;
+      --day-bg-today: rgba(220, 235, 255, 0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-body);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    button, input, select, textarea { font-family: inherit; font-size: inherit; }
+    button { border: none; background: none; cursor: pointer; }
+
+    /* ============ ЭКРАН ВХОДА ============ */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: var(--bg-body);
+      padding: var(--space-4);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      padding: var(--space-6);
+      background: var(--bg-card);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .login-header { text-align: center; margin-bottom: var(--space-6); }
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-4);
+      font-size: 1.25rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .login-title { font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+    .login-subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: var(--space-5); }
+
+    .form-group { margin-bottom: var(--space-4); }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg-surface);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 150ms;
+    }
+    input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .password-wrapper { position: relative; }
+    .toggle-password {
+      position: absolute;
+      right: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0.25rem;
+    }
+    .toggle-password:hover { color: var(--text-secondary); }
+
+    .login-btn {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: var(--space-4);
+      transition: background 150ms;
+    }
+    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .login-btn:hover:not(:disabled) { background: var(--accent-hover); }
+
+    .error-toast {
+      margin-bottom: var(--space-4);
+      padding: 0.8rem 1rem;
+      background: var(--error-soft);
+      border: var(--border-width) solid var(--error);
+      border-radius: var(--radius-sm);
+      color: var(--error);
+      font-size: 0.9rem;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .forgot { margin-top: var(--space-3); text-align: center; }
+    .forgot a { color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .forgot a:hover { text-decoration: underline; }
+
+    .login-hint {
+      margin-top: var(--space-6);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ============ ОСНОВНОЕ ПРИЛОЖЕНИЕ ============ */
+    #app { display: none; height: 100vh; width: 100%; }
+
+    .app-layout { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ПК: боковая панель */
+    .sidebar {
+      width: 240px;
+      background: var(--bg-card);
+      border-right: var(--border-width) solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+    .sidebar-header {
+      padding: var(--space-4);
+      border-bottom: var(--border-width) solid var(--border);
+    }
+    .sidebar-brand {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-3);
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.7rem 0.9rem;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin: 0.35rem 0;
+      cursor: pointer;
+      transition: all 150ms;
+    }
+    .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .nav-item.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+    .nav-item .icon { margin-right: 0.75rem; font-size: 1.15rem; }
+    .sidebar-footer {
+      padding: var(--space-3);
+      border-top: var(--border-width) solid var(--border);
+    }
+    .logout-btn {
+      width: 100%;
+      padding: 0.7rem;
+      color: var(--text-secondary);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 150ms;
+    }
+    .logout-btn:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border); }
+
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg-body);
+    }
+
+    .topbar {
+      height: var(--nav-height);
+      background: var(--bg-card);
+      border-bottom: var(--border-width) solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-4);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .topbar-left { display: flex; align-items: center; gap: var(--space-3); }
+    .page-title { font-size: 1.25rem; font-weight: 600; color: var(--text-primary); }
+    .user-info { color: var(--text-secondary); font-size: 0.95rem; }
+
+    .container { padding: var(--space-5); }
+
+    /* Мобильная навигация */
+    .mobile-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--mobile-nav-height);
+      background: var(--bg-card);
+      border-top: var(--border-width) solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 30;
+    }
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 200ms;
+      min-width: 60px;
+    }
+    .mobile-nav-item:hover, .mobile-nav-item.active { color: var(--accent); }
+    .mobile-nav-item .icon { font-size: 1.5rem; }
+
+    /* Карточки */
+    .card {
+      background: var(--bg-card);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-5);
+      margin-bottom: var(--space-5);
+      box-shadow: var(--shadow-soft);
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-title .icon { color: var(--accent); }
+
+    /* Статистика */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+    .stat-card {
+      background: var(--bg-surface);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+      text-align: center;
+    }
+    .stat-value { font-size: 1.75rem; font-weight: 600; color: var(--accent); line-height: 1.2; }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Навигация недели */
+    .week-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+      padding: 0 var(--space-1);
+    }
+    .week-nav-btn {
+      background: transparent;
+      border: var(--border-width) solid var(--border);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 150ms;
+    }
+    .week-nav-btn:hover { background: var(--bg-hover); border-color: var(--accent); color: var(--accent); }
+    .week-info { font-weight: 600; color: var(--text-primary); text-align: center; flex: 1; }
+    .week-summary { color: var(--text-secondary); font-size: 0.9rem; }
+
+    /* Сетка дней */
+    .days-row {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(140px, 1fr));
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: var(--space-3);
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+    .days-row::-webkit-scrollbar { display: none; }
+    .day-column { position: relative; }
+    .day-header { position: sticky; top: 0; background: var(--bg-body); z-index: 10; }
+    .day-column {
+      width: 100%;
+      min-width: 0;
+      background: var(--bg-card);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+      cursor: pointer;
+      transition: all 150ms;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      overflow: hidden;
+    }
+    .day-column:hover { border-color: var(--border-focus); background: var(--bg-hover); }
+    .day-column.active { border-color: var(--accent); background: var(--accent-soft); border-top-width: 3px; border-top-style: solid; }
+    .day-header { text-align: center; margin-bottom: var(--space-1); }
+    .day-name { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+    .day-number { font-size: 1.4rem; font-weight: 600; color: var(--text-primary); }
+    .day-events { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin: var(--space-1) auto 0; opacity: 0; transition: opacity 150ms; }
+    .day-column.active .day-events, .day-column.has-events .day-events { opacity: 1; }
+
+    /* Карточка урока */
+    .lesson-item {
+      background: var(--bg-card);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+      margin-bottom: var(--space-2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+    .lesson-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    .lesson-number {
+      width: 20px;
+      height: 20px;
+      background: var(--bg-surface);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .lesson-subject {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .lesson-subject-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .lesson-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .lesson-topic {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-1);
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .lesson-topic-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .lesson-homework {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      background: var(--bg-surface);
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
+      border-left: 2px solid var(--accent);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+    .mark-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #ffffff;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .mark-green { background: var(--success); }
+    .mark-yellow { background: var(--warning); }
+    .mark-red { background: var(--error); }
+    .mark-gray { background: var(--text-muted); }
+
+    /* Пустые состояния */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-8) var(--space-4);
+      color: var(--text-muted);
+    }
+    .empty-icon { font-size: 2rem; margin-bottom: var(--space-2); opacity: 0.4; }
+
+    /* Прогресс */
+    .subject-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: var(--border-width) solid var(--border);
+    }
+    .subject-row:last-child { border-bottom: none; }
+    .subject-name { font-weight: 600; color: var(--text-primary); }
+    .subject-marks { display: flex; gap: 0.4rem; }
+    .subject-avg { font-weight: 700; color: var(--accent); min-width: 50px; text-align: right; }
+
+    /* Загрузка */
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-8);
+      color: var(--text-muted);
+    }
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: var(--space-2);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Кнопки */
+    .btn {
+      padding: 0.65rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-outline {
+      border: var(--border-width) solid var(--border);
+      color: var(--text-primary);
+    }
+    .btn-outline:hover { background: var(--bg-hover); }
+
+    .refresh-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 0.4rem;
+    }
+    .refresh-btn:hover { color: var(--accent-hover); }
+
+    /* Настройки */
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-3) 0;
+      border-bottom: var(--border-width) solid var(--border);
+    }
+    .setting-item:last-child { border-bottom: none; }
+    .setting-label { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; }
+    .setting-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .toggle { position: relative; width: 44px; height: 24px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--border);
+      border-radius: 24px;
+      transition: 150ms;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: #ffffff;
+      border-radius: 50%;
+      transition: 150ms;
+    }
+    input:checked + .slider { background: var(--accent); }
+    input:checked + .slider:before { transform: translateX(20px); }
+
+    select {
+      background: var(--bg-card);
+      border: var(--border-width) solid var(--border);
+      color: var(--text-primary);
+      padding: 0.45rem 0.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .container { padding: var(--space-3); }
+      .topbar { padding: 0 var(--space-3); height: 56px; }
+      .days-row { gap: 8px; }
+      .day-column { width: 95px; padding: var(--space-2); }
+      .mobile-nav { display: flex; }
+      #app { padding-bottom: var(--mobile-nav-height); }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="error-toast" id="login-error"></div>
+    <div class="login-header">
+      <div class="logo">S</div>
+      <div class="login-title">Школа.by</div>
+      <div class="login-subtitle">Электронный дневник</div>
+    </div>
+    <form id="login-form">
+      <div class="form-group">
+        <label for="login-username">Логин</label>
+        <input type="text" id="login-username" name="username" placeholder="Введите логин" autocomplete="username">
+      </div>
+      <div class="form-group password-wrapper">
+        <label for="login-password">Пароль</label>
+        <input type="password" id="login-password" name="password" placeholder="Введите пароль" autocomplete="current-password">
+        <button type="button" class="toggle-password" id="toggle-password" aria-label="Показать пароль">👁</button>
+      </div>
+      <button type="submit" class="login-btn" id="login-btn">Войти</button>
+    </form>
+    <div class="forgot"><a href="#" id="forgot-link">Забыли пароль?</a></div>
+    <div class="login-hint">
+      Используйте логин и пароль от schools.by / e-schools.by.<br>
+      Данные из <a href="https://diary.e-schools.by" target="_blank" style="color:var(--accent)">diary.e-schools.by</a>.
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">Школа.by</div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-page="home"><span class="icon">📊</span>Главная</div>
+        <div class="nav-item" data-page="diary"><span class="icon">📅</span>Дневник</div>
+        <div class="nav-item" data-page="schedule"><span class="icon">📋</span>Расписание</div>
+        <div class="nav-item" data-page="progress"><span class="icon">📈</span>Успеваемость</div>
+        <div class="nav-item" data-page="settings"><span class="icon">⚙️</span>Настройки</div>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="logout-btn" id="logout-btn">Выйти</button>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="page-title" id="page-title">Главная</div>
+        </div>
+        <div class="user-info" id="user-info">
+          <span id="user-name">Гость</span>
+        </div>
+      </div>
+
+      <div class="container">
+        <section id="page-home" class="page">
+          <div class="card">
+            <div class="card-title"><span class="icon">👤</span>Обо мне</div>
+            <div id="home-user-info"></div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-card"><div class="stat-value" id="stat-marks">—</div><div class="stat-label">Оценок за четв.</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-avg">—</div><div class="stat-label">Средний балл</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-best">—</div><div class="stat-label">Лучшая</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-worst">—</div><div class="stat-label">Худшая</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-missed">—</div><div class="stat-label">Пропусков</div></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="icon">📚</span>Домашнее задание на завтра</div>
+            <div id="home-homework"></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="icon">📝</span>Последние оценки</div>
+            <div id="home-recent-grades"></div>
+          </div>
+        </section>
+
+        <section id="page-diary" class="page" style="display:none">
+          <div class="week-nav">
+            <button class="week-nav-btn" id="diary-prev-week">←</button>
+            <div class="week-info">
+              <div id="diary-week-summary" class="week-summary"></div>
+              <div id="diary-week-range"></div>
+            </div>
+            <button class="week-nav-btn" id="diary-next-week">→</button>
+            <button class="refresh-btn" id="diary-refresh">↻</button>
+          </div>
+          <div class="days-row" id="diary-days"></div>
+          <div id="diary-lessons-container"></div>
+        </section>
+
+        <section id="page-schedule" class="page" style="display:none">
+          <div class="week-nav">
+            <button class="week-nav-btn" id="sched-prev-week">←</button>
+            <div class="week-info">
+              <div id="sched-week-summary" class="week-summary"></div>
+            </div>
+            <button class="week-nav-btn" id="sched-next-week">→</button>
+            <button class="refresh-btn" id="sched-refresh">↻</button>
+          </div>
+          <div id="schedule-list"></div>
+        </section>
+
+        <section id="page-progress" class="page" style="display:none">
+          <div class="card">
+            <div class="card-title"><span class="icon">📈</span>Оценки по предметам</div>
+            <div id="progress-subjects"></div>
+          </div>
+        </section>
+
+        <section id="page-settings" class="page" style="display:none">
+          <div class="card">
+            <div class="card-title"><span class="icon">⚙️</span>Настройки</div>
+            <div class="setting-item">
+              <div><div class="setting-label">Показывать время уроков</div><div class="setting-desc">Отображать время начала и конца урока</div></div>
+              <label class="toggle"><input type="checkbox" id="setting-show-time" checked><div class="slider"></div></label>
+            </div>
+            <div class="setting-item">
+              <div><div class="setting-label">Помечать Д/З выполненным</div><div class="setting-desc">Можно отмечать выполненные задания</div></div>
+              <label class="toggle"><input type="checkbox" id="setting-mark-hw" checked><div class="slider"></div></label>
+            </div>
+            <div class="setting-item">
+              <div><div class="setting-label">Язык интерфейса</div><div class="setting-desc">Выберите язык отображения</div></div>
+              <select id="setting-language">
+                <option value="ru">Русский</option>
+                <option value="be">Беларуская</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="icon">🔗</span>Источник данных</div>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem">Все данные загружаются из <a href="https://diary.e-schools.by" target="_blank" style="color:var(--accent)">diary.e-schools.by</a></p>
+            <button class="btn btn-primary" id="refresh-all-data">Обновить все данные</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <nav class="mobile-nav">
+    <a class="mobile-nav-item active" href="#" data-page="home"><span class="icon">📊</span><span>Главная</span></a>
+    <a class="mobile-nav-item" href="#" data-page="diary"><span class="icon">📅</span><span>Дневник</span></a>
+    <a class="mobile-nav-item" href="#" data-page="schedule"><span class="icon">📋</span><span>Расписание</span></a>
+    <a class="mobile-nav-item" href="#" data-page="progress"><span class="icon">📈</span><span>Успеваемость</span></a>
+    <a class="mobile-nav-item" href="#" data-page="settings"><span class="icon">⚙️</span><span>Настройки</span></a>
+  </nav>
+</div>
+
+<script>
+// Обход жёсткого кэша браузера: один редирект за сессию с меткой _dsh
+(function() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has('_dsh')) {
+    sessionStorage.setItem('dsh_page_updated', 'true');
+    url.searchParams.set('_dsh', Date.now());
+    window.location.href = url.toString();
+  }
+})();
+
+const API_BASE = '';
+
+const state = {
+  isAuthenticated: false,
+  studentId: null,
+  schoolId: null,
+  schoolName: null,
+  username: null,
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  classId: null,
+  className: null,
+  weeks: [],
+  currentWeekIndex: 0,
+  currentWeekDays: [],
+  allQuarterDays: [],
+  selectedDayIndex: 0,
+};
+
+const loginScreen = document.getElementById('login-screen');
+const app = document.getElementById('app');
+const loginForm = document.getElementById('login-form');
+const loginBtn = document.getElementById('login-btn');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById('page-' + pageId).style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+  document.getElementById('page-title').textContent = pageTitles[pageId] || pageId;
+}
+
+const pageTitles = {
+  home: 'Главная',
+  diary: 'Дневник',
+  schedule: 'Расписание',
+  progress: 'Оценки',
+  settings: 'Настройки',
+};
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => showPage(item.dataset.page));
+});
+
+document.querySelectorAll('.mobile-nav-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault();
+    showPage(item.dataset.page);
+  });
+});
+
+async function apiGet(path) {
+  const resp = await fetch(path, {
+    credentials: 'include',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    },
+  });
+  if (resp.status === 401) { handleUnauthorized(); return null; }
+  return resp.json();
+}
+
+async function apiPost(path, body) {
+  const resp = await fetch(path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    },
+    body: JSON.stringify(body),
+    credentials: 'include',
+  });
+  if (resp.status === 401) { handleUnauthorized(); return null; }
+  return resp.json();
+}
+
+function handleUnauthorized() {
+  loginScreen.style.display = 'flex';
+  app.style.display = 'none';
+  state.isAuthenticated = false;
+}
+
+async function checkAuth() {
+  const data = await apiGet('/api/auth-status');
+  if (data && data.authenticated) {
+    state.isAuthenticated = true;
+    state.studentId = data.studentId;
+    state.schoolId = data.schoolId;
+    state.schoolName = data.schoolName;
+    state.username = data.username;
+    loginScreen.style.display = 'none';
+    app.style.display = 'flex';
+    showPage('home');
+    updateUserInfo();
+    await loadHomeData();
+  } else {
+    loginScreen.style.display = 'flex';
+    app.style.display = 'none';
+  }
+}
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  if (!username || !password) return;
+
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'ВХОД...';
+  loginError.style.display = 'none';
+
+  try {
+    const data = await apiPost('/api/login', { username, password });
+    if (!data) throw new Error('Ошибка входа');
+
+    state.isAuthenticated = true;
+    state.studentId = data.studentId;
+    state.schoolId = data.schoolId;
+    state.schoolName = data.schoolName;
+    state.username = data.username;
+    state.firstName = data.firstName || '';
+    state.lastName = data.lastName || '';
+    state.middleName = data.middleName || '';
+
+    updateUserInfo();
+    loginScreen.style.display = 'none';
+    app.style.display = 'flex';
+    showPage('home');
+    await loadHomeData();
+  } catch (err) {
+    loginError.textContent = err.message || 'Не удалось войти';
+    loginError.style.display = 'block';
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'ВОЙТИ';
+  }
+});
+
+document.getElementById('toggle-password').addEventListener('click', () => {
+  const inp = document.getElementById('login-password');
+  const btn = document.getElementById('toggle-password');
+  if (inp.type === 'password') {
+    inp.type = 'text'; btn.textContent = '👁';
+  } else {
+    inp.type = 'password'; btn.textContent = '👁';
+  }
+});
+
+document.getElementById('forgot-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  alert('Для сброса пароля обратитесь к классному руководителю');
+});
+
+function updateUserInfo() {
+  const nameEl = document.getElementById('user-name');
+  const homeInfo = document.getElementById('home-user-info');
+  const displayName = (state.firstName || state.lastName || state.username || 'Ученик');
+  nameEl.textContent = displayName;
+  const fullName = [state.lastName, state.firstName, state.middleName].filter(Boolean).join(' ');
+  const classPart = state.className ? ` · ${state.className}` : '';
+  homeInfo.innerHTML = `
+    <div style="font-size:1.2rem; font-weight:700; color:var(--text-primary)">${escapeHtml(fullName || state.username)}</div>
+    <div style="font-size:1rem; color:var(--text-secondary)">${escapeHtml(state.schoolName || 'Школа')}${classPart} · ID: ${state.studentId || '—'}</div>
+  `;
+}
+
+async function loadDiaryData() {
+  if (!state.isAuthenticated) return;
+  const weeks = await apiGet('/api/weeks');
+  if (!weeks) return;
+  state.weeks = weeks.map(w => ({
+    uuid: w.uuid,
+    summary: w.summary || 'Неделя',
+    startTs: w.start_ts !== undefined ? w.start_ts : (w.startTs || 0),
+    endTs: w.end_ts !== undefined ? w.end_ts : (w.endTs || 0),
+  }));
+  const nowMs = Date.now();
+  let activeIdx = -1;
+  for (let i = 0; i < state.weeks.length; i++) {
+    const end = (i + 1 < state.weeks.length) ? state.weeks[i + 1].startTs : state.weeks[i].startTs + 7 * 24 * 60 * 60 * 1000;
+    if (nowMs >= state.weeks[i].startTs && nowMs < end) { activeIdx = i; break; }
+  }
+  if (activeIdx === -1) {
+    activeIdx = nowMs < state.weeks[0].startTs ? 0 : state.weeks.length - 1;
+  }
+  state.currentWeekIndex = activeIdx;
+  state.selectedDayIndex = new Date().getDay() - 1;
+  if (state.selectedDayIndex < 0) state.selectedDayIndex = 6;
+  const startTs = state.weeks[state.currentWeekIndex].startTs;
+  const classInfo = await apiPost('/api/class', {
+    schoolId: state.schoolId,
+    studentId: state.studentId,
+    startTs,
+  });
+  if (classInfo) {
+    state.classId = classInfo.classId || null;
+    state.className = classInfo.className || null;
+    if (state.className) {
+      const homeInfo = document.getElementById('home-user-info');
+      if (homeInfo) homeInfo.innerHTML += ` · ${escapeHtml(state.className)}`;
+    }
+  }
+  await loadWeekLessons(state.currentWeekIndex);
+  await loadAllQuarterLessons();
+}
+
+async function loadWeekLessons(weekIndex) {
+  if (weekIndex < 0 || weekIndex >= state.weeks.length) return;
+  const week = state.weeks[weekIndex];
+  const container = document.getElementById('diary-lessons-container');
+  container.innerHTML = '<div class="loader"><div class="spinner"></div><div>Загрузка уроков...</div></div>';
+  const effectiveClassId = state.classId || '997b77ff-e26a-4a58-81cf-98390bfa5b41';
+  const lessons = await apiGet(`/api/lessons?schoolId=${state.schoolId}&classId=${encodeURIComponent(effectiveClassId)}&studentId=${state.studentId}&weekUuid=${encodeURIComponent(week.uuid)}`);
+  if (!lessons) return;
+  state.currentWeekDays = lessons.map(d => ({
+    date: new Date(d.date || Date.now()),
+    dayOfWeek: d.day_of_week !== undefined ? d.day_of_week : (new Date(d.date || Date.now()).getDay() || 7),
+    lessons: (d.slots || []).map(slot => ({
+      number: slot.number || 1,
+      subject: slot.subject_title || 'Урок',
+      topic: slot.topic || '',
+      homework: slot.homework || '',
+      mark: (slot.lesson_mark && slot.lesson_mark.mark) ? String(slot.lesson_mark.mark) : null,
+      startTime: (slot.start_time || '').substring(0, 5),
+      endTime: (slot.end_time || '').substring(0, 5),
+    })),
+  })).filter(d => d.lessons.length > 0);
+  renderWeekCalendar();
+  renderDay(state.selectedDayIndex);
+}
+
+async function loadAllQuarterLessons() {
+  const gathered = [...state.currentWeekDays];
+  for (let i = 0; i <= state.currentWeekIndex; i++) {
+    if (i === state.currentWeekIndex) continue;
+    const week = state.weeks[i];
+    try {
+      const effectiveClassId = state.classId || '997b77ff-e26a-4a58-81cf-98390bfa5b41';
+      const lessons = await apiGet(`/api/lessons?schoolId=${state.schoolId}&classId=${encodeURIComponent(effectiveClassId)}&studentId=${state.studentId}&weekUuid=${encodeURIComponent(week.uuid)}`);
+      if (lessons) {
+        gathered.push(...lessons.map(d => ({
+          date: new Date(d.date || Date.now()),
+          dayOfWeek: d.day_of_week !== undefined ? d.day_of_week : (new Date(d.date || Date.now()).getDay() || 7),
+          lessons: (d.slots || []).map(slot => ({
+            number: slot.number || 1,
+            subject: slot.subject_title || 'Урок',
+            topic: slot.topic || '',
+            homework: slot.homework || '',
+            mark: (slot.lesson_mark && slot.lesson_mark.mark) ? String(slot.lesson_mark.mark) : null,
+            startTime: (slot.start_time || '').substring(0, 5),
+            endTime: (slot.end_time || '').substring(0, 5),
+          })),
+        })));
+      }
+    } catch (e) { console.log('skip week', i, e); }
+  }
+  state.allQuarterDays = gathered;
+  updateHomeStats();
+  renderProgress();
+  renderSchedule();
+}
+
+async function loadHomeData() {
+  await loadDiaryData();
+}
+
+function updateHomeStats() {
+  const dataSource = state.allQuarterDays.length > 0 ? state.allQuarterDays : state.currentWeekDays;
+  const allMarks = [];
+  let totalMarks = 0;
+  let best = null, worst = null;
+  let missed = 0;
+  const subjects = {};
+  for (const d of dataSource) {
+    for (const l of d.lessons) {
+      if (l.mark) {
+        const m = parseInt(l.mark);
+        if (!isNaN(m)) {
+          allMarks.push(m);
+          totalMarks++;
+          if (best === null || m > best) best = m;
+          if (worst === null || m < worst) worst = m;
+        }
+        if (l.mark === 'Н' || l.mark === 'н' || l.mark === 'H') missed++;
+      }
+      if (!subjects[l.subject]) subjects[l.subject] = [];
+      if (l.mark) {
+        const m = parseInt(l.mark);
+        if (!isNaN(m)) subjects[l.subject].push(m);
+      }
+    }
+  }
+  const avg = allMarks.length > 0 ? (allMarks.reduce((a, b) => a + b, 0) / allMarks.length).toFixed(1) : '—';
+  setText('stat-marks', totalMarks);
+  setText('stat-avg', avg);
+  setText('stat-best', best !== null ? best : '—');
+  setText('stat-worst', worst !== null ? worst : '—');
+  setText('stat-missed', missed);
+  const now = new Date();
+  const appDow = now.getDay() === 0 ? 7 : now.getDay();
+  let targetAppDow = appDow + 1;
+  if (targetAppDow > 7) targetAppDow = 1;
+  const tomorrow = state.currentWeekDays.find(d => d.dayOfWeek === targetAppDow);
+  const hwEl = document.getElementById('home-homework');
+  if (!tomorrow || tomorrow.lessons.length === 0) {
+    hwEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📖</div><div>Завтра уроков нет</div></div>';
+  } else {
+    const hwTasks = tomorrow.lessons.filter(l => l.homework.trim());
+    hwEl.innerHTML = `
+      <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:var(--space-1)">${tomorrow.date.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
+      ${hwTasks.length === 0 ? '<div style="color:var(--text-muted)">Нет домашнего задания</div>' : hwTasks.map(l => `
+        <div style="padding:0.8rem 0; border-bottom:var(--border-width) solid var(--border)">
+          <div style="font-weight:700; color:var(--text-primary)">${escapeHtml(l.subject)}</div>
+          <div style="font-size:1rem; color:var(--text-secondary)">${escapeHtml(l.homework)}</div>
+        </div>
+      `).join('')}`;
+  }
+  const recent = [];
+  for (let i = dataSource.length - 1; i >= 0 && recent.length < 8; i--) {
+    for (const l of dataSource[i].lessons) {
+      if (l.mark && !isNaN(parseInt(l.mark))) {
+        recent.push({ subject: l.subject, mark: l.mark });
+        if (recent.length >= 8) break;
+      }
+    }
+  }
+  const recentEl = document.getElementById('home-recent-grades');
+  if (recent.length === 0) {
+    recentEl.innerHTML = '<div class="empty-state" style="padding:var(--space-6)"><div class="empty-icon">📭</div><div>Оценок пока нет</div></div>';
+  } else {
+    recentEl.innerHTML = recent.map(r => `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.8rem 0; border-bottom:var(--border-width) solid var(--border)">
+        <div style="font-weight:600; color:var(--text-primary)">${escapeHtml(r.subject)}</div>
+        <span class="mark-badge ${getMarkClass(r.mark)}">${escapeHtml(r.mark)}</span>
+      </div>
+    `).join('');
+  }
+}
+
+function getMarkClass(mark) {
+  const m = parseInt(mark);
+  if (m >= 9) return 'mark-green';
+  if (m >= 7) return 'mark-yellow';
+  if (m >= 4) return 'mark-red';
+  return 'mark-gray';
+}
+
+function renderWeekCalendar() {
+  const container = document.getElementById('diary-days');
+  const week = state.weeks[state.currentWeekIndex];
+  const monday = new Date(week.startTs);
+  const months = ['ЯНВАРЬ','ФЕВРАЛЬ','МАРТ','АПРЕЛЬ','МАЙ','ИЮНЬ','ИЮЛЬ','АВГУСТ','СЕНТЯБРЬ','ОКТЯБРЬ','НОЯБРЬ','ДЕКАБРЬ'];
+  const dayNames = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
+  document.getElementById('diary-week-summary').textContent = week.summary || 'Учебная неделя';
+  const endDate = new Date(monday.getTime() + 6 * 24 * 60 * 60 * 1000);
+  document.getElementById('diary-week-range').textContent = `${monday.getDate()} ${months[monday.getMonth()]} — ${endDate.getDate()} ${months[endDate.getMonth()]}`;
+  container.innerHTML = '';
+  for (let i = 0; i < 7; i++) {
+    const dayDate = new Date(monday.getTime() + i * 24 * 60 * 60 * 1000);
+    const dayModel = state.currentWeekDays.find(d => d.dayOfWeek === i + 1);
+    const hasEvents = dayModel && dayModel.lessons.some(l => l.homework.trim() || (l.mark && l.mark.trim()));
+    const isSelected = i === state.selectedDayIndex;
+    const col = document.createElement('div');
+    col.className = `day-column ${isSelected ? 'active' : ''} ${hasEvents ? 'has-events' : ''}`;
+    col.onclick = () => { state.selectedDayIndex = i; renderWeekCalendar(); renderDay(i); };
+    col.innerHTML = `
+      <div class="day-header">
+        <div class="day-name">${dayNames[i]}</div>
+        <div class="day-number">${dayDate.getDate()}</div>
+        <div class="day-events"></div>
+      </div>
+      ${renderDayLessons(dayModel)}
+    `;
+    container.appendChild(col);
+  }
+}
+
+function renderDayLessons(dayModel) {
+  if (!dayModel || dayModel.lessons.length === 0) return '<div style="font-size:0.9rem; color:var(--text-muted); text-align:center; margin-top:var(--space-6)">Уроков нет</div>';
+  return dayModel.lessons.map(l => `
+    <div class="lesson-item">
+      <div class="lesson-header">
+        <div class="lesson-number">${l.number}</div>
+        <div class="lesson-subject"><span class="lesson-subject-text">${escapeHtml(l.subject)}</span> ${l.mark ? `<span class="mark-badge ${getMarkClass(l.mark)}">${escapeHtml(l.mark)}</span>` : ''}</div>
+        <div class="lesson-time">${l.startTime || l.endTime ? `${l.startTime || ''} ${l.endTime ? '— ' + l.endTime : ''}` : ''}</div>
+      </div>
+      ${l.topic ? `<div class="lesson-topic"><span class="lesson-topic-text">${escapeHtml(l.topic)}</span></div>` : ''}
+      ${l.homework ? `<div class="lesson-homework">${escapeHtml(l.homework)}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderDay(dayIndex) {
+  const container = document.getElementById('diary-lessons-container');
+  const dayModel = state.currentWeekDays.find(d => d.dayOfWeek === dayIndex + 1);
+  if (!dayModel || dayModel.lessons.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📖</div><div>На этот день уроков нет</div></div>';
+    return;
+  }
+  container.innerHTML = `<h3 style="font-size:1.4rem; font-weight:700; color:var(--text-primary); margin-bottom:var(--space-3)">${dayModel.date.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>` +
+    dayModel.lessons.map(l => `
+      <div class="lesson-item">
+        <div class="lesson-header">
+          <div class="lesson-number">${l.number}</div>
+          <div class="lesson-subject"><span class="lesson-subject-text">${escapeHtml(l.subject)}</span> ${l.mark ? `<span class="mark-badge ${getMarkClass(l.mark)}">${escapeHtml(l.mark)}</span>` : ''}</div>
+          <div class="lesson-time">${l.startTime || l.endTime ? `${l.startTime || ''} ${l.endTime ? '— ' + l.endTime : ''}` : ''}</div>
+        </div>
+        ${l.topic ? `<div class="lesson-topic"><span class="lesson-topic-text">${escapeHtml(l.topic)}</span></div>` : ''}
+        ${l.homework ? `<div class="lesson-homework">${escapeHtml(l.homework)}</div>` : ''}
+      </div>
+    `).join('');
+}
+
+document.getElementById('diary-prev-week').addEventListener('click', async () => {
+  if (state.currentWeekIndex > 0) {
+    state.currentWeekIndex--;
+    await loadWeekLessons(state.currentWeekIndex);
+  }
+});
+document.getElementById('diary-next-week').addEventListener('click', async () => {
+  if (state.currentWeekIndex < state.weeks.length - 1) {
+    state.currentWeekIndex++;
+    await loadWeekLessons(state.currentWeekIndex);
+  }
+});
+document.getElementById('diary-refresh').addEventListener('click', async () => {
+  await loadWeekLessons(state.currentWeekIndex);
+});
+
+document.getElementById('sched-prev-week').addEventListener('click', async () => {
+  if (state.currentWeekIndex > 0) {
+    state.currentWeekIndex--;
+    await loadWeekLessons(state.currentWeekIndex);
+    renderSchedule();
+  }
+});
+document.getElementById('sched-next-week').addEventListener('click', async () => {
+  if (state.currentWeekIndex < state.weeks.length - 1) {
+    state.currentWeekIndex++;
+    await loadWeekLessons(state.currentWeekIndex);
+    renderSchedule();
+  }
+});
+document.getElementById('sched-refresh').addEventListener('click', async () => {
+  await loadWeekLessons(state.currentWeekIndex);
+  renderSchedule();
+});
+
+function renderSchedule() {
+  const container = document.getElementById('schedule-list');
+  const activeDays = state.currentWeekDays.filter(d => d.lessons.length > 0);
+  const dayNamesFull = {1:'Понедельник',2:'Вторник',3:'Среда',4:'Четверг',5:'Пятница',6:'Суббота',7:'Воскресенье'};
+  if (activeDays.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><div>Расписание ещё не заполнено</div><div style="margin-top:var(--space-1); font-size:0.9rem; color:var(--text-muted)">Попробуйте позже</div></div>';
+    return;
+  }
+  container.innerHTML = activeDays.map(d => `
+    <div class="card" style="margin-bottom:var(--space-4)">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2)">
+        <div style="font-weight:700; color:var(--text-primary)">${dayNamesFull[d.dayOfWeek] || 'День ' + d.dayOfWeek}</div>
+        <div style="font-size:0.9rem; color:var(--text-muted)">${d.lessons.length} уроков</div>
+      </div>
+      ${d.lessons.map(l => `
+        <div style="display:flex; align-items:center; padding:0.6rem 0; border-bottom:var(--border-width) solid var(--border); ${l===d.lessons[d.lessons.length-1]?'style="border-bottom:none"':''}">
+          <div style="width:24px; height:24px; background:var(--bg-surface); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:700; color:var(--text-muted); flex-shrink:0">${l.number}</div>
+          ${l.startTime ? `<div style="font-size:0.9rem; color:var(--text-muted); margin:0 1rem; min-width:70px">${l.startTime}${l.endTime ? ' — '+l.endTime : ''}</div>` : ''}
+          <div style="flex:1; min-width:0; overflow:hidden"><div style="font-weight:700; color:var(--text-primary); font-size:1.1rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${escapeHtml(l.subject)}</div>${l.topic ? '<div style="font-weight:400; color:var(--text-muted); font-size:0.9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:4px">· '+escapeHtml(l.topic)+'</div>' : ''}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function renderProgress() {
+  const dataSource = state.allQuarterDays.length > 0 ? state.allQuarterDays : state.currentWeekDays;
+  const subjects = {};
+  for (const d of dataSource) {
+    for (const l of d.lessons) {
+      if (!subjects[l.subject]) subjects[l.subject] = [];
+      if (l.mark && !isNaN(parseInt(l.mark))) subjects[l.subject].push(parseInt(l.mark));
+    }
+  }
+  const container = document.getElementById('progress-subjects');
+  const keys = Object.keys(subjects).sort();
+  if (keys.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><div>Нет данных об оценках</div></div>';
+    return;
+  }
+  container.innerHTML = keys.map(subj => {
+    const marks = subjects[subj];
+    const avg = (marks.reduce((a,b)=>a+b,0)/marks.length).toFixed(1);
+    return `
+      <div class="subject-row">
+        <div class="subject-name">${escapeHtml(subj)}</div>
+        <div class="subject-marks">${marks.map(m => `<span class="mark-badge ${getMarkClass(m)}">${m}</span>`).join('')}</div>
+        <div class="subject-avg">ср. ${avg}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+document.getElementById('logout-btn').addEventListener('click', async () => {
+  await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+  location.reload();
+});
+
+document.getElementById('refresh-all-data').addEventListener('click', async () => {
+  await loadDiaryData();
+  alert('Данные обновлены');
+});
+
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+function escapeHtml(text) {
+  if (text == null) return '';
+  const div = document.createElement('div');
+  div.textContent = String(text);
+  return div.innerHTML;
+}
+
+checkAuth();
+</script>
+</body>
+</html>
