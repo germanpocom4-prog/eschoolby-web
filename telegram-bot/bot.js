@@ -660,7 +660,7 @@ bot.on('message', async (msg) => {
 
 // ============ ВЕБХУК ДЛЯ RENDER ============
 
-app.post(`/webhook/${BOT_TOKEN}`, (req, res) => {
+app.post('/webhook', (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
 });
@@ -672,15 +672,15 @@ app.get('/', (req, res) => {
 
 async function start() {
   try {
-    await bot.setWebHook(`${WEBHOOK_URL}/webhook/${BOT_TOKEN}`);
-    console.log(`✅ Webhook установлен: ${WEBHOOK_URL}/webhook/${BOT_TOKEN}`);
+    await bot.setWebHook(`${WEBHOOK_URL}/webhook`);
+    console.log(`✅ Webhook установлен: ${WEBHOOK_URL}/webhook`);
   } catch (e) {
     console.error('❌ Ошибка установки вебхука:', e.message);
   }
 
   app.listen(PORT, () => {
     console.log(`🤖 Бот запущен на порту ${PORT}`);
-    console.log(`Вебхук URL: ${WEBHOOK_URL}/webhook/${BOT_TOKEN}`);
+    console.log(`Вебхук URL: ${WEBHOOK_URL}/webhook`);
   });
 }
 
